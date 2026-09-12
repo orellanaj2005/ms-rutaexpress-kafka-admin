@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: kafkaadmin
+  config:
+    import: optional:file:.env[.properties]
+
+server:
+  port: 8086
+
+security:
+  jwt:
+    issuer-uri: https://login.microsoftonline.com/${TENANT_ID}/v2.0
+    audience: ${API_CLIENT_ID}
+
+kafka:
+  bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:34.233.170.20:9092}

@@ -13,4 +13,37 @@ security:
     audience: ${API_CLIENT_ID}
 
 kafka:
-  bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:34.233.170.20:9092}
+  # Listener EXTERNAL de los 3 brokers (IP privada de ec2-kafka). Se sobrescribe con KAFKA_BOOTSTRAP_SERVERS.
+  bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:172.31.80.112:9092,172.31.80.112:9093,172.31.80.112:9094}
+
+rutaexpress:
+  kafka:
+    operation-timeout-seconds: 15
+    # Tópicos del contrato (tabla 3.3 del plan, creados por infra/kafka/topics/create-topics.sh).
+    # No se pueden eliminar; sí se puede cambiar su configuración y aumentar sus particiones.
+    # Los tópicos internos de Kafka (prefijo "__") también quedan protegidos.
+    protected-topics:
+      - shipments.events
+      - audit.timeline
+      - notify.DLT
+      - audit.DLT
+      - report.DLT
+    # Consumer groups de los microservicios: no se eliminan, pero se pueden resetear (con el grupo inactivo).
+    protected-groups:
+      - ms-rutaexpress-audit
+      - ms-rutaexpress-report
+      - ms-rutaexpress-notify
+    # Configuraciones de tópico aceptadas al crear (configs) y al modificar (PUT /configs).
+    editable-configs:
+      - retention.ms
+      - retention.bytes
+      - cleanup.policy
+      - min.insync.replicas
+      - delete.retention.ms
+      - min.compaction.lag.ms
+      - max.compaction.lag.ms
+      - min.cleanable.dirty.ratio
+      - segment.ms
+      - segment.bytes
+      - max.message.bytes
+      - compression.type

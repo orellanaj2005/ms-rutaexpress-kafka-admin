@@ -1,0 +1,9 @@
+package cl.rutaexpress.kafkaadmin.exception;
+
+/** El tópico o el consumer group pedido no existe (404). */
+public class ResourceNotFoundException extends RuntimeException {
+
+    public ResourceNotFoundException(String message) {
+        super(message);
+    }
+}
